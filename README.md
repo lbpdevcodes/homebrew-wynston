@@ -93,11 +93,28 @@ wynston engine remove ~/code/my-app         # stop answering for a folder
 
 ### On a terminal
 
-Run in a terminal, `serve` shows a dashboard: a line per folder with its chat
-and how its turn stands, then the turn going on, its steps and words as they
-come. When Claude asks for a tool the policy doesn't allow, the ask shows at
-the bottom: press `y` to allow it or `n` to deny it. Press `q` or `Ctrl+C` to
-stop. Turns still running end as failed, and `serve` waits for Claude to exit.
+Run in a terminal, `serve` shows a dashboard:
+- **at the top,** a line per folder with its chat and how its turn stands;
+- **in the middle,** one folder's chat: what was said before, then each turn,
+  its steps and words as they come.
+
+You can write in that chat from the dashboard:
+
+| Key | Does |
+| --- | --- |
+| `↑` / `↓` (or `k` / `j`) | Shows another folder's chat. Until you choose one, the dashboard shows the chat whose turn started last. |
+| `Tab` | Starts writing to the chat shown, on the line at the bottom. |
+| `Enter` | Sends what you wrote. Claude answers on this machine, and the answer streams in, as it does for a message from the web. |
+| `Esc` | Stops writing, and keeps what you wrote. |
+| `PgUp` / `PgDn` | Scrolls the chat. |
+| `y` / `n` | Allows or denies the tool Claude asked for, when an ask shows at the bottom. |
+| `q` or `Ctrl+C` | Stops `serve`. Turns still running end as failed, and `serve` waits for Claude to exit. |
+
+**While you're writing, every key types,** `y`, `n` and `q` included, so
+press `Esc` first to answer an ask or quit. `Ctrl+C` still stops `serve`.
+
+**When a turn is still running in the chat, it won't take another message.**
+The line keeps what you wrote, and says why.
 
 Without a terminal, as under a service manager, `serve` writes log lines
 instead (JSON) and declines every ask outside the policy.
