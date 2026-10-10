@@ -3,20 +3,24 @@
 Host a Wynston chat engine from the command line.
 
 A Wynston chat can be answered by a coding agent on your own machine instead of
-by a server-side assistant. The Wynston Mac app can host one, and
-`wynston engine serve` does the same job headless, on a Linux box or a server:
-- it opens one chat per folder you configure;
-- when someone types in the chat, it runs Claude Code in that folder;
-- it streams the reply back into the chat.
+by a server-side assistant. The Wynston Mac app can host one, and so can
+`wynston`, on a Mac, a Linux box or a server:
+- run `wynston` in a folder, and it opens a new chat there, ready to write in;
+- `wynston engine serve` answers a chat for each folder you configure, headless
+  if you like;
+- either way, Claude Code runs in the folder, and its reply streams into the
+  chat.
 
-**Status: early.** Sign-in works (`login`, `whoami`, `logout`), and so does
-`wynston engine serve`, with a dashboard in a terminal where you approve the
-asks the policy doesn't allow, and it runs as a service.
+**Status: early.** Sign-in works (`login`, `whoami`, `logout`), and so do
+`wynston` and `wynston engine serve`, with a dashboard in a terminal where you
+write and approve the asks the policy doesn't allow. `serve` also runs as a
+service.
 
 ## Install
 
 Each release has static binaries for Linux and macOS, on amd64 and arm64, with
-no dependencies.
+no dependencies. The macOS ones are signed and notarized, so macOS runs them
+without asking, whether they came from Homebrew or a download.
 
 ```sh
 brew install --cask lbpdevcodes/wynston/wynston     # macOS, or Linux with Homebrew
@@ -63,13 +67,33 @@ under Access keys, and `logout` prints the link.
 
 ## Answer chats
 
-Before `serve` can answer anything:
+Before `wynston` can answer anything:
 1. **Claude Code is signed in on this machine.** `serve` runs
    [Claude Code](https://claude.com/claude-code), and uses its sign-in.
 2. **Your Wynston workspace has a published default assistant.** It never
    answers these chats, but a chat can't be opened without one.
 3. **You've run `wynston login` once**, at a terminal, and approved the
    device. A service can't do this for you.
+
+### In the folder you're in
+
+```sh
+cd ~/code/my-app
+wynston
+```
+
+- **It opens a new chat in this folder**, titled `<machine> · <folder>`, and
+  shows it on the dashboard (below) with the line at the bottom ready. Type,
+  and press `Enter`. Claude Code answers in this folder, and the answer streams
+  in. The chat is in Wynston on the web too.
+- **There's nothing to add first,** and nothing is remembered: each run opens
+  another chat. The policy from `wynston engine allow` applies.
+- **`Ctrl+C` quits** (or `Esc`, then `q`). The chat stays in Wynston, but this
+  machine stops answering it.
+- **It needs a terminal.** To answer whenever someone writes, from the web or a
+  phone, use `serve`.
+
+### In folders you configure
 
 ```sh
 wynston engine add ~/code/my-app            # answer a chat for this folder
@@ -93,7 +117,7 @@ wynston engine remove ~/code/my-app         # stop answering for a folder
 
 ### On a terminal
 
-Run in a terminal, `serve` shows a dashboard:
+`wynston` on its own, and `serve` run in a terminal, show a dashboard:
 - **at the top,** a line per folder with its chat and how its turn stands;
 - **in the middle,** one folder's chat: what was said before, then each turn,
   its steps and words as they come.
@@ -108,10 +132,11 @@ You can write in that chat from the dashboard:
 | `Esc` | Stops writing, and keeps what you wrote. |
 | `PgUp` / `PgDn` | Scrolls the chat. |
 | `y` / `n` | Allows or denies the tool Claude asked for, when an ask shows at the bottom. |
-| `q` or `Ctrl+C` | Stops `serve`. Turns still running end as failed, and `serve` waits for Claude to exit. |
+| `q` or `Ctrl+C` | Quits. Turns still running end as failed, and `wynston` waits for Claude to exit. |
 
 **While you're writing, every key types,** `y`, `n` and `q` included, so
-press `Esc` first to answer an ask or quit. `Ctrl+C` still stops `serve`.
+press `Esc` first to answer an ask or quit. `Ctrl+C` still quits. `wynston` on
+its own starts out writing; `serve` starts out watching, until you press `Tab`.
 
 **When a turn is still running in the chat, it won't take another message.**
 The line keeps what you wrote, and says why.
