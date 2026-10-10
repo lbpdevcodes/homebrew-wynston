@@ -105,7 +105,8 @@ instead (JSON) and declines every ask outside the policy.
 ### As a service
 
 Each release archive has a `contrib/` folder with a service file for each
-system. Each says how to install it.
+system. Homebrew keeps it in `$(brew --prefix)/Caskroom/wynston/<version>/contrib/`.
+Each file says how to install it.
 - **Linux:** `wynston-engine.service` is a systemd user unit. It runs as you,
   restarts after an error, and logs to the journal
   (`journalctl --user -u wynston-engine -f`). Run `loginctl enable-linger` to
